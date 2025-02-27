@@ -784,7 +784,9 @@ function build_extboot(){
 
 	cd kernel
 	make ARCH=$RK_ARCH $RK_KERNEL_DEFCONFIG $RK_KERNEL_DEFCONFIG_FRAGMENT
-	make ARCH=$RK_ARCH $RK_KERNEL_DTS.img -j$RK_JOBS
+	# make ARCH=$RK_ARCH rockchip/$RK_KERNEL_DTS.dtb -j$RK_JOBS
+	make ARCH=$RK_ARCH Image -j$RK_JOBS
+	make ARCH=$RK_ARCH modules -j$RK_JOBS
 
 	echo -e "\e[36m Generate extLinuxBoot image start\e[0m"
 
@@ -799,6 +801,7 @@ function build_extboot(){
 	echo -e "\tkernel /Image-$KERNEL_VERSION" >> $EXTBOOT_DIR/extlinux/extlinux.conf
 
     if [ -f $CFG_DIR/$RK_TARGET_PRODUCT/.$RK_PRODUCT_MODEL ];then
+	echo "Found $CFG_DIR/$RK_TARGET_PRODUCT/.$RK_PRODUCT_MODEL"
 	dtblist=$(cat $CFG_DIR/$RK_TARGET_PRODUCT/.$RK_PRODUCT_MODEL)
 	for i in $dtblist
 	do
@@ -826,11 +829,34 @@ function build_extboot(){
         echo -e "\tinitrd /initrd-$KERNEL_VERSION" >> $EXTBOOT_DIR/extlinux/extlinux.conf
     fi
 
-    cp ${TOP_DIR}/kernel/.config $EXTBOOT_DIR/config-$KERNEL_VERSION
-    cp ${TOP_DIR}/kernel/System.map $EXTBOOT_DIR/System.map-$KERNEL_VERSION
-    cp ${TOP_DIR}/kernel/*.bmp $EXTBOOT_DIR/ || true
+    # cp ${TOP_DIR}/kernel/.config $EXTBOOT_DIR/config-$KERNEL_VERSION
+    # cp ${TOP_DIR}/kernel/System.map $EXTBOOT_DIR/System.map-$KERNEL_VERSION
+    # cp ${TOP_DIR}/kernel/*.bmp $EXTBOOT_DIR/ || true
 
     make ARCH=$RK_ARCH INSTALL_MOD_STRIP=1 INSTALL_MOD_PATH=$EXTBOOT_DIR modules_install
+
+    if [ -n "$FF_EXTBOOT_SIZE" ];then
+	EXTBOOT_IMG_SIZE=$FF_EXTBOOT_SIZE
+    else
+	EXTBOOT_IMG_SIZE=128M
+    fi
+
+    rm -rf $EXTBOOT_IMG && truncate -s $EXTBOOT_IMG_SIZE $EXTBOOT_IMG
+    fakeroot ${TOP_DIR}/device/rockchip/common/mkfs.ext4 -Fq -L "boot" -d $EXTBOOT_DIR $EXTBOOT_IMG
+    finish_build
+}
+
+function build_onlyextboot(){
+	check_config RK_KERNEL_DTS RK_KERNEL_DEFCONFIG || return 0
+	echo -e "\e[36m Generate extLinuxBoot image start\e[0m"
+
+	EXTBOOT_IMG=${TOP_DIR}/kernel/extboot.img
+	EXTBOOT_DIR=${TOP_DIR}/kernel/extboot
+
+    if [[ -e ${TOP_DIR}/kernel/ramdisk.img ]]; then
+        cp ${TOP_DIR}/kernel/ramdisk.img $EXTBOOT_DIR/initrd-$KERNEL_VERSION
+        echo -e "\tinitrd /initrd-$KERNEL_VERSION" >> $EXTBOOT_DIR/extlinux/extlinux.conf
+    fi
 
     if [ -n "$FF_EXTBOOT_SIZE" ];then
 	EXTBOOT_IMG_SIZE=$FF_EXTBOOT_SIZE
@@ -2862,6 +2888,7 @@ for option in ${OPTIONS}; do
 		loader) build_loader ;;
 		kernel) build_kernel ;;
 		extboot) build_extboot ;;
+		onlyextboot) build_onlyextboot ;;
 		kerneldeb) build_kerneldeb ;;
 		wifibt)
 			build_wifibt $2 $3

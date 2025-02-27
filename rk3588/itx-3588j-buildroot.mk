@@ -30,7 +30,7 @@ export RK_PRODUCT_MODEL=ITX_3588J
 export RK_RECOVERY_RAMDISK=rk3588-recovery-arm64.cpio.gz
 
 # Recovery config
-export RK_CFG_RECOVERY=
+export RK_CFG_RECOVERY=rk3588_recovery
 
 # Buildroot config
 export RK_CFG_BUILDROOT=firefly_rk3588
