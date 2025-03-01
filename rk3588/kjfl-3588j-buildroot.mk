@@ -4,8 +4,8 @@ CUR_DIR=`dirname $CMD`
 source $CUR_DIR/BoardConfig-rk3588-kj.mk
 
 # Kernel defconfig fragment
-export RK_KERNEL_DEFCONFIG_FRAGMENT="$RK_KERNEL_DEFCONFIG_FRAGMENT firefly-linux.config"
-export RK_KERNEL_DEFCONFIG=rockchip_linux_defconfig
+# export RK_KERNEL_DEFCONFIG_FRAGMENT="$RK_KERNEL_DEFCONFIG_FRAGMENT firefly-linux.config"
+export RK_KERNEL_DEFCONFIG=openeuler_rk3588_defconfig
 
 # Uboot_defconfig_fragment
 export RK_UBOOT_DEFCONFIG_FRAGMENT=firefly-linux.config
@@ -14,7 +14,7 @@ export RK_UBOOT_DEFCONFIG_FRAGMENT=firefly-linux.config
 export RK_PARAMETER=parameter-2k.txt
 
 # Kernel dts
-export RK_KERNEL_DTS=rk3588-firefly-itx-3588j-mipi101-BSD1218-A101KL68
+export RK_KERNEL_DTS=rk3588-firefly-itx-3588j
 
 # Set userdata partition type
 export RK_USERDATA_FS_TYPE=ext4
@@ -41,4 +41,4 @@ export RK_CFG_BUILDROOT=firefly_rk3588
 export RK_EXTRA_PARTITIONS=
 
 # packagefile for make update image
-export RK_PACKAGE_FILE=rk3588-kj-package-file
+export RK_PACKAGE_FILE=rk3588-ubuntu-package-file

@@ -784,9 +784,9 @@ function build_extboot(){
 
 	cd kernel
 	make ARCH=$RK_ARCH $RK_KERNEL_DEFCONFIG $RK_KERNEL_DEFCONFIG_FRAGMENT
-	# make ARCH=$RK_ARCH rockchip/$RK_KERNEL_DTS.dtb -j$RK_JOBS
-	make ARCH=$RK_ARCH Image -j$RK_JOBS
-	make ARCH=$RK_ARCH modules -j$RK_JOBS
+	make ARCH=$RK_ARCH $RK_KERNEL_DTS.img -j$RK_JOBS
+	# make ARCH=$RK_ARCH Image -j$RK_JOBS
+	# make ARCH=$RK_ARCH modules -j$RK_JOBS
 
 	echo -e "\e[36m Generate extLinuxBoot image start\e[0m"
 

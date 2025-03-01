@@ -7,9 +7,10 @@ export RK_UBOOT_DEFCONFIG=rk3588
 # Uboot image format type: fit(flattened image tree)
 export RK_UBOOT_FORMAT_TYPE=fit
 # Kernel defconfig
-export RK_KERNEL_DEFCONFIG=openeuler_rk3588_defconfig
+export RK_KERNEL_DEFCONFIG=rockchip_linux_defconfig
 # Kernel defconfig fragment
-export RK_KERNEL_DEFCONFIG_FRAGMENT=kj.config
+# export RK_KERNEL_DEFCONFIG_FRAGMENT=kj.config
+export RK_KERNEL_DEFCONFIG_FRAGMENT=rk3588_linux.config
 # Kernel dts
 export RK_KERNEL_DTS=rk3588-firefly-itx-3588j
 # boot image type

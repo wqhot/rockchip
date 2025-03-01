@@ -44,6 +44,8 @@ rk_ramdisk_build_init()
 		exit -1
 	fi
 
+	echo "SYSTEM_IMAGE: $SYSTEM_IMAGE"
+
 	$COMMON_DIR/mk-dm.sh $1 $SYSTEM_IMAGE
 }
 
@@ -146,6 +148,10 @@ fi
 fi
 
 echo -n "pack $RAMDISK_IMG..."
+echo "ROOTFS_IMAGE: $ROOTFS_IMAGE"
+echo "KERNEL_IMAGE: $KERNEL_IMAGE"
+echo "KERNEL_DTB: $KERNEL_DTB"
+echo "TARGET_IMAGE: $TARGET_IMAGE"
 if [ -f "$TOP_DIR/device/rockchip/$RK_TARGET_PRODUCT/$RK_RECOVERY_FIT_ITS" ];then
 	if [ "$RK_RAMDISK_SECURITY_BOOTUP" = "true" ];then
 		if [ -z "$RK_SYSTEM_CHECK_METHOD" ]; then
