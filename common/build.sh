@@ -853,10 +853,10 @@ function build_onlyextboot(){
 	EXTBOOT_IMG=${TOP_DIR}/kernel/extboot.img
 	EXTBOOT_DIR=${TOP_DIR}/kernel/extboot
 
-    if [[ -e ${TOP_DIR}/kernel/ramdisk.img ]]; then
-        cp ${TOP_DIR}/kernel/ramdisk.img $EXTBOOT_DIR/initrd-$KERNEL_VERSION
-        echo -e "\tinitrd /initrd-$KERNEL_VERSION" >> $EXTBOOT_DIR/extlinux/extlinux.conf
-    fi
+    # if [[ -e ${TOP_DIR}/kernel/ramdisk.img ]]; then
+    #     cp ${TOP_DIR}/kernel/ramdisk.img $EXTBOOT_DIR/initrd-$KERNEL_VERSION
+    #     echo -e "\tinitrd /initrd-$KERNEL_VERSION" >> $EXTBOOT_DIR/extlinux/extlinux.conf
+    # fi
 
     if [ -n "$FF_EXTBOOT_SIZE" ];then
 	EXTBOOT_IMG_SIZE=$FF_EXTBOOT_SIZE
@@ -865,7 +865,18 @@ function build_onlyextboot(){
     fi
 
     rm -rf $EXTBOOT_IMG && truncate -s $EXTBOOT_IMG_SIZE $EXTBOOT_IMG
-    fakeroot ${TOP_DIR}/device/rockchip/common/mkfs.ext4 -Fq -L "boot" -d $EXTBOOT_DIR $EXTBOOT_IMG
+	sudo mkfs.vfat $EXTBOOT_IMG
+    # fakeroot ${TOP_DIR}/device/rockchip/common/mkfs.ext4 -Fq -L "boot" -d $EXTBOOT_DIR $EXTBOOT_IMG
+	# rm -rf $EXTBOOT_IMG
+	sudo rm -rf ${EXTBOOT_DIR}.tmp
+	mkdir -p ${EXTBOOT_DIR}.tmp
+	sudo mount $EXTBOOT_IMG ${EXTBOOT_DIR}.tmp
+	sudo cp -rf $EXTBOOT_DIR/* ${EXTBOOT_DIR}.tmp
+	sudo umount ${EXTBOOT_DIR}.tmp
+	# EXTBOOT_COUNT=`echo $EXTBOOT_IMG_SIZE | awk -F "M" '{print $1}'`
+	# echo "=== EXTBOOT_COUNT = $EXTBOOT_COUNT ==="
+	# dd if=/dev/zero of=$EXTBOOT_IMG bs=1M count=$EXTBOOT_COUNT
+	# sudo mkfs.vfat -Fq -L "boot" -d ${EXTBOOT_DIR} $EXTBOOT_IMG
     finish_build
 }
 
