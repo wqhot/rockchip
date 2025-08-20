@@ -850,8 +850,8 @@ function build_onlyextboot(){
 	check_config RK_KERNEL_DTS RK_KERNEL_DEFCONFIG || return 0
 	echo -e "\e[36m Generate extLinuxBoot image start\e[0m"
 
-	EXTBOOT_IMG=${TOP_DIR}/kernel/extboot.img
-	EXTBOOT_DIR=${TOP_DIR}/kernel/extboot
+	EXTBOOT_IMG=${TOP_DIR}/kernel_out/extboot.img
+	EXTBOOT_DIR=${TOP_DIR}/kernel_out/extboot
 
     # if [[ -e ${TOP_DIR}/kernel/ramdisk.img ]]; then
     #     cp ${TOP_DIR}/kernel/ramdisk.img $EXTBOOT_DIR/initrd-$KERNEL_VERSION
